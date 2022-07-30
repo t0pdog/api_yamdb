@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
-import datetime
+from datetime import datetime
 
 ROLE_CHOICES = (
     ('user', 'Пользователь'),
@@ -26,7 +26,7 @@ class User(AbstractUser):
 
 class Review(models.Model):
     title = models.ForeignKey(
-        Titles,
+        'Title',
         on_delete=models.CASCADE,
     )
     text = models.TextField(),
@@ -67,14 +67,14 @@ class Comments(models.Model):
 
 class Title(models.Model):
     name = models.TextField()
-    year = models.IntegerField(max_value=datetime.now().year)
+    year = models.IntegerField(
+        validators=[
+            MaxValueValidator(datetime.now().year)
+        ])
     rating = models.IntegerField(null=True, default=None)
     description = models.TextField(blank=True, null=True)
     genre = models.ManyToManyField(
         'Genre',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="titles",
     )
     category = models.ForeignKey(
         'Category',
