@@ -21,12 +21,13 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default='user',
     )
+    confirmation_code = models.TextField(blank=True,)
 
 
 class Review(models.Model):
     title = models.ForeignKey(
         Titles,
-        on_delete=models.CASCADE,   
+        on_delete=models.CASCADE,
     )
     text = models.TextField(),
     author = models.ForeignKey(
@@ -37,12 +38,12 @@ class Review(models.Model):
     score = models.IntegerField(
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(10),       
+            MaxValueValidator(10),
         ]
     )
     pub_date = models.DateTimeField(
         auto_now_add=True
-        )
+    )
 
     class Meta:
         ordering = ['pub_date']
@@ -52,7 +53,7 @@ class Comments(models.Model):
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        related_name = 'comments',
+        related_name='comments',
     )
     text = models.TextField()
     author = models.ForeignKey(
@@ -61,61 +62,7 @@ class Comments(models.Model):
     )
     pub_date = models.DateTimeField(
         auto_now_add=True
-        )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    )
 
 
 class Title(models.Model):
