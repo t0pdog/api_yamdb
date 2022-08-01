@@ -29,7 +29,7 @@ class Review(models.Model):
         'Title',
         on_delete=models.CASCADE,
     )
-    text = models.TextField(),
+    text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -71,7 +71,7 @@ class Title(models.Model):
         validators=[
             MaxValueValidator(datetime.now().year)
         ])
-    rating = models.IntegerField(null=True, default=None)
+    rating = models.IntegerField(blank=True, null=True,default=None)
     description = models.TextField(blank=True, null=True)
     genre = models.ManyToManyField(
         'Genre',
