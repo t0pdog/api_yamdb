@@ -1,8 +1,9 @@
-from reviews.models import Title, Genre, Category, Review, Comments
 from rest_framework import serializers
+from reviews.models import Title, Genre, Category, Review, Comments
 from rest_framework.relations import SlugRelatedField
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
+
 
 class TitleSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
@@ -55,6 +56,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+
 
 class CommentSerializer(serializers.ModelSerializer):
     review = serializers.SlugRelatedField(

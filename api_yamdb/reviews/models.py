@@ -1,8 +1,7 @@
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from datetime import datetime
-
 ROLE_CHOICES = (
     ('user', 'Пользователь'),
     ('moderator', 'Модератор'),
@@ -11,17 +10,104 @@ ROLE_CHOICES = (
 
 
 class User(AbstractUser):
-    bio = models.TextField(
-        'Биография',
+    """Переопределение стандартной модели User.
+
+    Переопределены поля: email, first_name, last_name.
+    Добавлены поля: bio, role, confirmation_code.
+    """
+
+    ADMINISTRATOR = 'admin'
+    MODERATOR = 'moderator'
+    USER = 'user'
+
+    ROLE_CHOICES = (
+        (ADMINISTRATOR, 'admin'),
+        (MODERATOR, 'moderator'),
+        (USER, 'user')
+    )
+
+    email = models.EmailField(
+        max_length=254,
+        unique=True,
+        verbose_name='Адрес электронной почты',
+    )
+    first_name = models.TextField(
+        max_length=150,
+        verbose_name='Имя',
         blank=True,
     )
-    role = models.CharField(
-        'Пользовательские роли',
-        max_length=16,
-        choices=ROLE_CHOICES,
-        default='user',
+    last_name = models.TextField(
+        max_length=150,
+        verbose_name='Фамилия',
+        blank=True,
     )
-    confirmation_code = models.TextField(blank=True,)
+    bio = models.TextField(
+        verbose_name='Биография',
+        blank=True
+    )
+    role = models.CharField(
+        choices=ROLE_CHOICES,
+        default=USER,
+        verbose_name='Права доступа',
+        max_length=50,
+    )
+
+    class Meta:
+        ordering = ['id']
+
+    @property
+    def access_moderator(self):
+        return self.role == self.MODERATOR
+
+    @property
+    def access_administrator(self):
+        return self.role == self.ADMINISTRATOR
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = 'Жанр'
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = 'Категория'
+
+
+class Title(models.Model):
+    name = models.TextField()
+    year = models.DateTimeField()
+    rating = models.IntegerField(null=True, default=None)
+    description = models.TextField(blank=True, null=True)
+    genre = models.ManyToManyField(
+        Genre,
+        blank=True,
+        related_name="titles",
+    )
+    category = models.ForeignKey(
+        Category,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="titles",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Произведение'
 
 
 class Review(models.Model):

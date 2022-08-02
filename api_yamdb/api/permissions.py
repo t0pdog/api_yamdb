@@ -13,6 +13,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         else:
             return False
 
+
 class IsOwnerOrHigherOrReadOnly(permissions.BasePermission):
     """Доступ владелец или выше, иначе только просмотр.
 
@@ -34,4 +35,4 @@ class IsOwnerOrHigherOrReadOnly(permissions.BasePermission):
             return True
         elif request.user.access_moderator:
             return True
-        return request.user.access_administrator or request.user.is_superuse
+        return request.user.access_administrator or request.user.is_superuser

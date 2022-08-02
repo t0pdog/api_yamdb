@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from reviews.models import Title, Genre, Category, Review, Comments
 from rest_framework import filters, permissions, status, viewsets, mixins
@@ -12,6 +13,7 @@ from .serializers import (
     CategorySerializer, CommentSerializer,
     ReviewSerializer
 )
+
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
