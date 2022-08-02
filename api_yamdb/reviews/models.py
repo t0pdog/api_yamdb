@@ -1,7 +1,13 @@
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from datetime import datetime
+
+ROLE_CHOICES = (
+    ('user', 'Пользователь'),
+    ('moderator', 'Модератор'),
+    ('admin', 'Администратор'),
+)
 
 
 class User(AbstractUser):
@@ -46,7 +52,6 @@ class User(AbstractUser):
         verbose_name='Права доступа',
         max_length=50,
     )
-    confirmation_code = models.TextField(blank=True)
 
     class Meta:
         ordering = ['id']
@@ -65,7 +70,7 @@ class Review(models.Model):
         'Title',
         on_delete=models.CASCADE,
     )
-    text = models.TextField(),
+    text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -107,7 +112,7 @@ class Title(models.Model):
         validators=[
             MaxValueValidator(datetime.now().year)
         ])
-    rating = models.IntegerField(null=True, default=None)
+    rating = models.IntegerField(blank=True, null=True,default=None)
     description = models.TextField(blank=True, null=True)
     genre = models.ManyToManyField(
         'Genre',

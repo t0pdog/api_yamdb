@@ -40,6 +40,9 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['id'],
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
             },
             managers=[
                 ('objects', django.contrib.auth.models.UserManager()),
@@ -72,11 +75,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.TextField()),
-                ('year', models.IntegerField(validators=[django.core.validators.MaxValueValidator(2022)])),
+                ('year', models.DateTimeField()),
                 ('rating', models.IntegerField(default=None, null=True)),
                 ('description', models.TextField(blank=True, null=True)),
                 ('category', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='titles', to='reviews.Category')),
-                ('genre', models.ManyToManyField(to='reviews.Genre')),
+                ('genre', models.ManyToManyField(blank=True, related_name='titles', to='reviews.Genre')),
             ],
             options={
                 'verbose_name': 'Произведение',
@@ -86,6 +89,7 @@ class Migration(migrations.Migration):
             name='Review',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('text', models.TextField()),
                 ('score', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)])),
                 ('pub_date', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='review', to=settings.AUTH_USER_MODEL)),
