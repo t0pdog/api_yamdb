@@ -3,25 +3,61 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
-ROLE_CHOICES = (
-    ('user', 'Пользователь'),
-    ('moderator', 'Модератор'),
-    ('admin', 'Администратор'),
-)
-
 
 class User(AbstractUser):
-    bio = models.TextField(
-        'Биография',
+    """Переопределение стандартной модели User.
+
+    Переопределены поля: email, first_name, last_name.
+    Добавлены поля: bio, role, confirmation_code.
+    """
+
+    ADMINISTRATOR = 'admin'
+    MODERATOR = 'moderator'
+    USER = 'user'
+
+    ROLE_CHOICES = (
+        (ADMINISTRATOR, 'admin'),
+        (MODERATOR, 'moderator'),
+        (USER, 'user')
+    )
+
+    email = models.EmailField(
+        max_length=254,
+        unique=True,
+        verbose_name='Адрес электронной почты',
+    )
+    first_name = models.TextField(
+        max_length=150,
+        verbose_name='Имя',
         blank=True,
     )
-    role = models.CharField(
-        'Пользовательские роли',
-        max_length=16,
-        choices=ROLE_CHOICES,
-        default='user',
+    last_name = models.TextField(
+        max_length=150,
+        verbose_name='Фамилия',
+        blank=True,
     )
-    confirmation_code = models.TextField(blank=True,)
+    bio = models.TextField(
+        verbose_name='Биография',
+        blank=True
+    )
+    role = models.CharField(
+        choices=ROLE_CHOICES,
+        default=USER,
+        verbose_name='Права доступа',
+        max_length=50,
+    )
+    confirmation_code = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['id']
+
+    @property
+    def access_moderator(self):
+        return self.role == self.MODERATOR
+
+    @property
+    def access_administrator(self):
+        return self.role == self.ADMINISTRATOR
 
 
 class Review(models.Model):
