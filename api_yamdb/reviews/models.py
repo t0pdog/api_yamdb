@@ -1,6 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from datetime import datetime
+ROLE_CHOICES = (
+    ('user', 'Пользователь'),
+    ('moderator', 'Модератор'),
+    ('admin', 'Администратор'),
+)
 
 
 class User(AbstractUser):
@@ -106,10 +112,10 @@ class Title(models.Model):
 
 class Review(models.Model):
     title = models.ForeignKey(
-        Title,
+        'Title',
         on_delete=models.CASCADE,
     )
-    text = models.TextField(),
+    text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -143,3 +149,50 @@ class Comments(models.Model):
     pub_date = models.DateTimeField(
         auto_now_add=True
     )
+
+
+class Title(models.Model):
+    name = models.TextField()
+    year = models.IntegerField(
+        validators=[
+            MaxValueValidator(datetime.now().year)
+        ])
+    rating = models.IntegerField(blank=True, null=True,default=None)
+    description = models.TextField(blank=True, null=True)
+    genre = models.ManyToManyField(
+        'Genre',
+    )
+    category = models.ForeignKey(
+        'Category',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="titles",
+    )
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Произведение'
+
+    
+class Genre(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Жанр'
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = 'Категория'

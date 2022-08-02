@@ -34,11 +34,15 @@ class Migration(migrations.Migration):
                 ('last_name', models.TextField(blank=True, max_length=150, verbose_name='Фамилия')),
                 ('bio', models.TextField(blank=True, verbose_name='Биография')),
                 ('role', models.CharField(choices=[('admin', 'admin'), ('moderator', 'moderator'), ('user', 'user')], default='user', max_length=50, verbose_name='Права доступа')),
+                ('confirmation_code', models.TextField(blank=True)),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
             ],
             options={
                 'ordering': ['id'],
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
             },
             managers=[
                 ('objects', django.contrib.auth.models.UserManager()),
@@ -85,6 +89,7 @@ class Migration(migrations.Migration):
             name='Review',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('text', models.TextField()),
                 ('score', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)])),
                 ('pub_date', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='review', to=settings.AUTH_USER_MODEL)),
