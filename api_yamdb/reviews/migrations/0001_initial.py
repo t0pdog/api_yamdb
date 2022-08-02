@@ -34,7 +34,6 @@ class Migration(migrations.Migration):
                 ('last_name', models.TextField(blank=True, max_length=150, verbose_name='Фамилия')),
                 ('bio', models.TextField(blank=True, verbose_name='Биография')),
                 ('role', models.CharField(choices=[('admin', 'admin'), ('moderator', 'moderator'), ('user', 'user')], default='user', max_length=50, verbose_name='Права доступа')),
-                ('confirmation_code', models.TextField(blank=True)),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
             ],

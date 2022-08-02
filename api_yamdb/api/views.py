@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, get_object_or_404
 from reviews.models import Title, Genre, Category, Review, Comments
 from rest_framework import filters, permissions, status, viewsets, mixins
