@@ -1,10 +1,7 @@
-from reviews.models import Title, Genre, Category
-from rest_framework import viewsets, mixins
+from rest_framework import mixins, viewsets
 
-from .serializers import (
-    TitleSerializer, GenreSerializer,
-    CategorySerializer,
-)
+from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
+from reviews.models import Category, Genre, Title
 
 
 class TitleViewSet(viewsets.ModelViewSet):
