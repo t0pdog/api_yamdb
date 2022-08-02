@@ -1,12 +1,9 @@
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from reviews.models import Title, Genre, Category, Review, Comments
 from rest_framework import filters, permissions, status, viewsets, mixins
-from django.shortcuts import get_object_or_404
-from .permissions import (
-    IsOwnerOrHigherOrReadOnly,
-    IsAdminOrReadOnly,
-)
+from .permissions import IsAdminOrReadOnly, IsOwnerOrHigherOrReadOnly
+from rest_framework.pagination import LimitOffsetPagination
 
 from .serializers import (
     TitleSerializer, GenreSerializer,
@@ -18,6 +15,8 @@ from .serializers import (
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
+    permission_classes = [IsAdminOrReadOnly]
+    pagination_class = LimitOffsetPagination
 
 
 class CreateRetrieveDestroyViewSet(
@@ -30,14 +29,18 @@ class CreateRetrieveDestroyViewSet(
 class GenreViewSet(CreateRetrieveDestroyViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    # permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
 
 
 class CategoryViewSet(CreateRetrieveDestroyViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    # permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
 
 

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from datetime import datetime
+
 ROLE_CHOICES = (
     ('user', 'Пользователь'),
     ('moderator', 'Модератор'),
@@ -62,52 +63,6 @@ class User(AbstractUser):
     @property
     def access_administrator(self):
         return self.role == self.ADMINISTRATOR
-
-
-class Genre(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
-
-    def __str__(self) -> str:
-        return self.name
-
-    class Meta:
-        verbose_name = 'Жанр'
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
-
-    def __str__(self) -> str:
-        return self.name
-
-    class Meta:
-        verbose_name = 'Категория'
-
-
-class Title(models.Model):
-    name = models.TextField()
-    year = models.DateTimeField()
-    rating = models.IntegerField(null=True, default=None)
-    description = models.TextField(blank=True, null=True)
-    genre = models.ManyToManyField(
-        Genre,
-        blank=True,
-        related_name="titles",
-    )
-    category = models.ForeignKey(
-        Category,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="titles",
-    )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Произведение'
 
 
 class Review(models.Model):
