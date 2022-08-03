@@ -48,4 +48,69 @@ python manage.py runserver
 http://127.0.0.1:8000/redoc/
 ```
 
+
 Вот некоторые примеры запросов к эндпоинтам и их ответы:
+
+
+Получение списка всех произведений
+Получить список всех объектов.
+
+Права доступа: Доступно без токена ( GET запрос):
+
+```
+http://127.0.0.1:8000/api/v1/titles/
+```
+
+Ответ сервера:
+```
+[{
+"count": 0,
+"next": "string",
+"previous": "string",
+"results": [
+{
+"id": 0,
+"name": "string",
+"year": 0,
+"rating": 0,
+"description": "string",
+"genre": [
+{
+"name": "string",
+"slug": "string"
+}],
+"category": {
+"name": "string",
+"slug": "string"
+}}]}]
+```
+
+
+Получение информации о произведении
+Информация о произведении
+
+Права доступа: Доступно без токена ( GET запрос):
+
+
+```
+http://127.0.0.1:8000/api/v1/titles/{titles_id}/
+```
+
+Ответ сервера:
+```
+{
+"id": 0,
+"name": "string",
+"year": 0,
+"rating": 0,
+"description": "string",
+"genre": [
+{
+"name": "string",
+"slug": "string"
+}
+],
+"category": {
+"name": "string",
+"slug": "string"
+}}

@@ -1,10 +1,10 @@
+from datetime import datetime
+
 from rest_framework import serializers
-from reviews.models import Title, Genre, Category, Review, Comments
-from rest_framework.relations import SlugRelatedField
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
-from datetime import datetime
-from django.db.models import Avg
+
+from reviews.models import Category, Comments, Genre, Review, Title
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         many=True,
     )
     year = serializers.IntegerField()
-    
+
     def validate_year(self, value):
         year = datetime.today().year
         if value > year:
@@ -52,6 +52,7 @@ class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(
         source='reviews__score__avg', read_only=True
     )
+
     class Meta:
         fields = '__all__'
         model = Title
