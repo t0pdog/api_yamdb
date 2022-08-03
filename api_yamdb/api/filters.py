@@ -1,5 +1,7 @@
 import django_filters
+
 from reviews.models import Title
+
 
 class TitleFilter(django_filters.rest_framework.FilterSet):
     category = django_filters.CharFilter(
