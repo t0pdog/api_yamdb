@@ -59,18 +59,25 @@ class User(AbstractUser):
 
 
 class Title(models.Model):
-    name = models.TextField()
-    year = models.IntegerField()
-    rating = models.IntegerField(blank=True, null=True, default=None)
-    description = models.TextField(blank=True, null=True)
+    name = models.TextField(verbose_name='название')
+    year = models.IntegerField(verbose_name='Дата выхода')
+    rating = models.IntegerField(
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Рейтинг'
+    )
+    description = models.TextField(blank=True, verbose_name='Описание')
     genre = models.ManyToManyField(
         'Genre',
+        verbose_name='Жанр'
     )
     category = models.ForeignKey(
         'Category',
+        verbose_name='Категория',
         null=True,
         on_delete=models.SET_NULL,
-        related_name="titles",
+        related_name="titles"
     )
 
     def __str__(self):
@@ -81,8 +88,8 @@ class Title(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=200, verbose_name='название')
+    slug = models.SlugField(unique=True, verbose_name='Идентификатор')
 
     def __str__(self) -> str:
         return self.name
@@ -92,8 +99,8 @@ class Genre(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=200, verbose_name='название')
+    slug = models.SlugField(unique=True, verbose_name='Идентификатор')
 
     def __str__(self) -> str:
         return self.name
