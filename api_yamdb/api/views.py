@@ -5,7 +5,8 @@ from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 
 from .filters import TitleFilter
-from .permissions import IsAdminOrReadOnly, IsOwnerOrHigherOrReadOnly
+from .permissions import (IsAdminOrReadOnly, IsAdminUpdate, IsModeratorUpdate,
+                          IsOwnerUpdate)
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
                           TitleCreateSerializer, TitleSerializer)
@@ -54,7 +55,7 @@ class CategoryViewSet(CreateRetrieveDestroyViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsOwnerOrHigherOrReadOnly]
+    permission_classes = [IsOwnerUpdate | IsModeratorUpdate | IsAdminUpdate]
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get("title_id"))
@@ -68,7 +69,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrHigherOrReadOnly]
+    permission_classes = [IsOwnerUpdate | IsModeratorUpdate | IsAdminUpdate]
 
     def get_queryset(self):
         review = get_object_or_404(Review, pk=self.kwargs.get("review_id"))
