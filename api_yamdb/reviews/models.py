@@ -53,19 +53,19 @@ class Category(models.Model):
 
     class Meta:
         verbose_name = 'Категория'
-       
-       
+
+
 class Review(models.Model):
     title = models.ForeignKey(
         'Title',
-        verbose_name = 'Произведение',
+        verbose_name='Произведение',
         on_delete=models.CASCADE,
         related_name='reviews'
     )
-    text = models.TextField(verbose_name = 'Текст отзыва')
+    text = models.TextField(verbose_name='Текст отзыва')
     author = models.ForeignKey(
         User,
-        verbose_name = 'Автор',
+        verbose_name='Автор',
         on_delete=models.CASCADE,
         related_name='review',
     )
@@ -74,11 +74,11 @@ class Review(models.Model):
             MinValueValidator(1),
             MaxValueValidator(10),
         ],
-        verbose_name = 'Оценка'
+        verbose_name='Оценка'
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
-        verbose_name = 'Дата публикации'
+        verbose_name='Дата публикации'
     )
 
     class Meta:
@@ -97,15 +97,15 @@ class Comments(models.Model):
         Review,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name = 'Отзыв'
+        verbose_name='Отзыв'
     )
-    text = models.TextField(verbose_name = 'Текст комментария')
+    text = models.TextField(verbose_name='Текст комментария')
     author = models.ForeignKey(
         User,
-        verbose_name = 'Автор',
+        verbose_name='Автор',
         on_delete=models.CASCADE
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
-        verbose_name = 'Дата публикации'
+        verbose_name='Дата публикации'
     )
