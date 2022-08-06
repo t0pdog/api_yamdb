@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 class IsOwnerUpdate(permissions.BasePermission):
-    """Изменения толко владельц."""
+    """Изменения только владельц."""
 
     def has_permission(self, request, view):
         return (request.method in permissions.SAFE_METHODS
@@ -13,7 +13,7 @@ class IsOwnerUpdate(permissions.BasePermission):
 
 
 class IsModeratorUpdate(permissions.BasePermission):
-    """Изменения толко модератор."""
+    """Изменения только модератор."""
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
@@ -24,7 +24,7 @@ class IsModeratorUpdate(permissions.BasePermission):
 
 
 class IsAdminUpdate(permissions.BasePermission):
-    """Изменения толко администратор."""
+    """Изменения только администратор."""
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
