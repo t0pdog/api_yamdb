@@ -3,15 +3,16 @@ from django.core.mail import send_mail
 from rest_framework import filters, mixins, serializers, status, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.decorators import action
 
+from .models import User
 from .permissions import AdminOnly
 from .serializers import (AdminUserSerializer, CreateUserSerializer,
                           TokenUserSerializer, UserSerializer)
-from reviews.models import User
 
 
 class CreateUsersView(APIView):
@@ -82,12 +83,15 @@ class RetrieveUpdateDestroyViewSet(
 class AdminUserViewSet(RetrieveUpdateDestroyViewSet):
     serializer_class = AdminUserSerializer
     permission_classes = (AdminOnly,)
+    pagination_class = PageNumberPagination
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('username',)
     lookup_fields = ['username']
 
     def get_queryset(self):
         username = self.kwargs.get('username')
-        new_queryset = User.objects.filter(username=username)
-        return new_queryset
+        queryset = User.objects.filter(username=username)
+        return queryset
 
 
 class AdminUsersViewSet(CreateListViewSet):
@@ -98,18 +102,26 @@ class AdminUsersViewSet(CreateListViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
 
-
-class MeUserViewSet(viewsets.ViewSet):
-
-    def retrieve(self, request, pk=None):
+    @action(
+        detail=False,
+        methods=['get'],
+        permission_classes=[IsAuthenticated],
+        url_path='me',
+        url_name='me'
+    )
+    def get_me(self, request, pk=None):
         queryset = User.objects.all()
-        user = get_object_or_404(queryset, username=self.request.user.username)
+        user = get_object_or_404(
+            queryset, username=request.user.username)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def partial_update(self, request, pk=None):
+    @get_me.mapping.patch
+    def patch_me(self, request, pk=None):
         serializer = UserSerializer(
             request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)

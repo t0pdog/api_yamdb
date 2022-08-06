@@ -283,6 +283,7 @@ class Test05ReviewAPI:
         )
         response = admin_client.get(f'/api/v1/titles/{titles[0]["id"]}/')
         data = response.json()
+   
         assert data.get('rating') == 7, (
             'Проверьте, что при GET запросе `/api/v1/titles/{title_id}/` '
             'с отзывами возвращается правильно значение `rating`'
