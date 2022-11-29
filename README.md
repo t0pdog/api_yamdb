@@ -4,9 +4,9 @@ The works themselves are not in YaMDb; you cannot watch a movie or listen to mus
 In each category, there are works: books, films, or music. For example, in the category "Books" there may be works "Winnie the Pooh and All-All-All" and "The Martian Chronicles", and in the category "Music" - the song "Davecha" by the group "Insects" and the second suite of Bach. The output can be assigned to a genre from the preset list (for example, "Fairy Tale", "Rock" or "Arthouse"). New genres can only be created by the administrator.
 Users leave text reviews (Review) for the works and issue a rating.
 
-# The technology stack is available in requirements.txt
+### The technology stack is available in requirements.txt
 
-# Resources API YaMDb
+## Resources API YaMDb
 **AUTH**: authentication.
 
 **USERS**: users.
@@ -21,13 +21,13 @@ Users leave text reviews (Review) for the works and issue a rating.
 
 **COMMENTS**: Comments on reviews. The comment is tied to a specific review.
 
-# User registration algorithm
+### User registration algorithm
 User sends a POST request with an email parameter to `/api/v1/auth/email/`.
 YaMDB sends an email with a confirmation code (confirmation_code) to the email address (feature under development).
 The user sends a POST request with the email and confirmation_code parameters to `/api/v1/auth/token/`, in response to the request, he receives a token (JWT token).
 These operations are performed once, when the user registers. As a result, the user receives a token and can work with the API by sending this token with each request.
 
-# User Roles
+### User Roles
 **Anonymous** - can view descriptions of works, read reviews and comments.
 
 **Authenticated user (user)** - can read everything, like Anonymous, can additionally publish reviews and rate works (films / books / songs), can comment on other people's reviews and rate them; can edit and delete their reviews and comments.
@@ -44,38 +44,36 @@ These operations are performed once, when the user registers. As a result, the u
 Clone a repository and change to it on the command line:
 ```
 git clone https://github.com/t0pdog/api_yamdb.git
-```
 cd api_yamdb
 ```
-```
+
 Create and activate virtual environment:
 ```
 python -m venv venv
-```
 source venv/Scripts/activate
 ```
-```
+
 Install dependencies from a file requirements.txt:
 ```
 pip install -r requirements.txt
 ```
-```
+
 To start the development server, while in the project directory, run the commands:
 ```
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
-```
+
 Run the project:
 ```
 python manage.py runserver
 ```
-```
+
 The project is launched and available at [localhost:8000](http://127.0.0.1:8000/).
 
 Documentation is available at the address:
-
+```
 http://127.0.0.1:8000/redoc/
 ```
 
@@ -90,7 +88,7 @@ Access rights: Available without a token ( GET request):
 http://127.0.0.1:8000/api/v1/titles/
 ```
 
-# Server response:
+### Server response:
 ```
 [{
 "count": 0,
